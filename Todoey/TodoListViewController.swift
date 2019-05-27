@@ -12,11 +12,18 @@ class TodoListViewController: UITableViewController {
 
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
     
+    
+    let defaults = UserDefaults.standard
+    
     //@IBOutlet weak var todoCellLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
+        
     }
     
     //MARK - TableView Datasource Methods
@@ -61,6 +68,8 @@ class TodoListViewController: UITableViewController {
             print(newTodoTextField.text!)
             if newTodoTextField.text?.isEmpty == false {
                 self.itemArray.append(newTodoTextField.text!)
+                self.defaults.set(self.itemArray, forKey: "TodoListArray")
+                
                 self.tableView.reloadData()
             }
         }
