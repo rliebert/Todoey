@@ -70,9 +70,24 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-//    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//        tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//    }
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if let item = todoItems?[indexPath.row] {
+                do {
+                    try realm.write {
+                        realm.delete(item)
+                    }
+                } catch {
+                    print("Error deleting Item: \(error)")
+                }
+            }
+            tableView.reloadData()
+        }
+    }
     
     //MARK - Add new items
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
